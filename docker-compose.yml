@@ -1,0 +1,29 @@
+version: '3'
+services:
+  httpd-php7:
+    build: .
+    environment:
+      - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+      - TERM=xterm
+        #- PMA_ARBITRARY=1
+      #- PMA_HOST=172.19.0.2
+      - MYSQL_ROOT_PASSWORD=mariadb
+    ports:
+      - "20080:80"
+      - "20022:22"
+      - "29999:9999"
+    links:
+      - mariadb:db
+  mariadb:
+    restart: always
+    image: jasonzou/alpine-mariadb
+    environment:
+      - MARIADB_ROOTPASSWORD=mariadb                  # root password
+      - MARIADB_ROOTHOSTMASK=172.%.%.%            # root user hostmask (optional)
+      - MARIADB_DATABASE=mydb                         # create database (optional)
+      - MARIADB_USERNAME=mariadb                      # grant user name (optional)
+      - MARIADB_PASSWORD=mariadb                      # grant user password (optional)
+      - MARIADB_HOSTMASK=172.%.%.%                    # grant user hostmask (optional)
+      - CONTAINER_ROOTHOSTMASK=192.168.%.%                # grant user hostmask (optional)
+    ports: 
+      - "23306:3306"
